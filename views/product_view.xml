@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_form_view_return" model="ir.ui.view">
+        <field name="name">product.template.product.form.return</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='general_information']/group/group[@name='group_general']/field[@name='type']" position="before">
+                <field name="preparation_days" attrs="{'required': [('booking_ok', '!=', False)], 'invisible': [('booking_ok', '!=', True)]}"/>
+                <field name="buffer_days" attrs="{'required': [('booking_ok', '!=', False)]}"/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='general_information']/group/group[@name='group_standard_price']/field[@name='list_price']" position="before">
+                <field name="serial_number" attrs="{'required': [('booking_ok', '!=', False)], 'invisible': [('booking_ok', '!=', True)]}"/>
+            </xpath>
+            <xpath expr="//div[@name='options']" position="inside">
+                <div>
+                    <field name="booking_ok"/>
+                    <label for="booking_ok"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

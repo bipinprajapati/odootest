@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="myproducts" name="Products">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Products</t>
+            <div id="wrap" class="js_sale">
+                <div class="oe_structure"/>
+                <div class="container oe_website_sale">
+                    <div class="row">
+                        <t t-if="not bins">
+                            <div class="text-center text-muted">
+
+                                <html>
+                                    <head>
+                                        <link rel="stylesheet" type="text/css"
+                                              href="/bipin_20170816_testa/static/src/css/list_partner.css"/>
+                                        <link rel="stylesheet" type="text/css"
+                                              href="/bipin_20170816_testa/static/src/css/divimg.css"/>
+                                        <script src="/bipin_20170816_testa/static/src/js/list_partner.js"></script>
+                                        <script src="/bipin_20170816_testa/static/src/js/list_partner1.js"></script>
+                                        <style>
+                                            table {
+                                            width:100%;
+                                            }
+                                            table, th, td {
+                                            border: 1px solid black;
+                                            border-collapse: collapse;
+                                            }
+                                            th, td {
+                                            padding: 5px;
+                                            text-align: left;
+                                            }
+                                            table#t01 tr:nth-child(even) {
+                                            background-color: #eee;
+                                            }
+                                            table#t01 tr:nth-child(odd) {
+                                            background-color:#fff;
+                                            }
+                                            table#t01 th {
+                                            background-color: black;
+                                            color: white;
+                                            }
+                                        </style>
+                                    </head>
+                                    <body>
+                                        <table id="t01">
+                                            <h2>List Of Partners</h2>
+                                            <t t-foreach="partners" t-as="partner">
+                                                <div class="container">
+                                                    <div class="list-group parent"
+                                                         style="width: 100%; overflow: hidden;">
+                                                        <a t-att-href="'/partner/%s/' % (partner.id)"
+                                                           class="list-group-item" style="height: 70px;">
+                                                            <div class="img" style="width: 55px; float: left;">
+                                                                <img class="image"
+                                                                     t-att-src="'data:image/png;base64,%s' % partner.image"
+                                                                     style="border:auto;"/>
+                                                                <!--<img src="/bipin_20170816_testa/static/img/bipin.jpg"/>-->
+                                                            </div>
+                                                            <div style="margin-left: 55px;">
+                                                                <h4 class="list-group-item-heading text" align="left">
+                                                                    <t t-esc="partner.name"/>
+                                                                </h4>
+                                                                <p t-if="partner.email"
+                                                                   class="list-group-item-text text" align="left">
+                                                                    <t t-esc="partner.email"/>
+                                                                </p>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </table>
+                                    </body>
+                                </html>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+       <template id="bipin_20170816_testa.signuppage1" name="Contact Form" inherit_id="website.contactus" customize_show="True">
+           <xpath expr="//div[@class='col-md-8']/div[@class='oe_structure']/div" position="replace">
+
+           </xpath>
+       </template>
+</odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_sell_booking_products" model="ir.ui.view">
+            <field name="name">view.sell.booking.products</field>
+            <field name="model">sell.booking.products</field>
+            <field name="arch" type="xml">
+                <form string="Sell Products" name="sell_product">
+                    <group>
+                        <group colspan="4">
+                            <field name="booking_order_id" invisible="1"/>
+                            <separator string="Booking Order Line" colspan="4"/>
+                            <field name="booking_line_ids" colspan="4" nolabel="1"
+                                   domain="[('booking_order_id','=',booking_order_id)]">
+                                <form string="Sales Order Lines">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="product_id"/>
+                                                <field name="serial_number"/>
+                                                <field name="start_date"/>
+                                                <field name="end_date"/>
+                                            </group>
+                                            <group>
+                                                <field name="actual_start_date" readonly="1"/>
+                                                <field name="actual_end_date" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                                <tree string="Booking Order Lines" editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="serial_number" readonly="1"/>
+                                    <field name="start_date" readonly="1"/>
+                                    <field name="end_date" readonly="1"/>
+                                    <field name="actual_start_date" readonly="1"/>
+                                    <field name="actual_end_date" readonly="1"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string='Create Invoice' name="invoice_create" type="object" class="btn-primary"/>
+                        <button string='No Invoice' name="no_invoice" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

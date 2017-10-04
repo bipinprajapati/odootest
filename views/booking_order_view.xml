@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_booking_order_tree" model="ir.ui.view">
+        <field name="name">booking.order.tree</field>
+        <field name="model">booking.order</field>
+        <field name="priority">4</field>
+        <field name="arch" type="xml">
+            <tree string="Booking Order" class="o_sale_order">
+                <field name="bo_number" string="Booking Order Number"/>
+                <field name="partner_id"/>
+                <field name="default_start_date"/>
+                <field name="default_end_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_booking_order_line_tree" model="ir.ui.view">
+        <field name="name">view.booking.order.line.tree</field>
+        <field name="model">booking.order.line</field>
+        <field name="arch" type="xml">
+            <tree string="Booking Order Line">
+                <field name="product_id"/>
+                <field name="serial_number" readonly="1"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="actual_start_date" readonly="1"/>
+                <field name="actual_end_date" readonly="1"/>
+                <field name="product_uom_qty"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_booking_order_form" model="ir.ui.view">
+        <field name="name">booking.order.form</field>
+        <field name="model">booking.order</field>
+        <field name="arch" type="xml">
+            <form string="Booking Order" class="o_sale_order">
+                <header>
+                    <button name="action_confirm" string="Validate" type="object" states="draft" class="btn-primary" help="DO is yet to be created"/>
+                    <button name="sell_products" states="out,sold" string="Sell Product" type="object" class="btn-primary" help="Sell Product"/>
+                    <button name="action_out" states="pending" string="Out" class="btn-primary o_sale_confirm" type="object" help="DO out is not yet processed"/>
+                    <button name="action_return" states="out" string="Return" class="o_sale_confirm" type="object" help="DO out is already processed"/>
+                    <button name="action_sold" states="out" string="Sold" class="o_sale_confirm" type="object" help="DO In is already processed"/>
+                    <button name="action_cancel" states="pending,sold,out,draft" string="Cancel" class="o_sale_confirm" type="object" help="Product is sold"/>
+                    <!--<button name="action_draft" states="cancel,return" string="Reset To Draft" class="o_sale_confirm" type="object" help="Product is sold"/>-->
+                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,out,returned"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object"
+                                name="action_view_delivery"
+                                class="oe_stat_button"
+                                icon="fa-truck"
+                                attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="base.group_user">
+                            <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                            <field name="picking_ids" invisible="1"/>
+                        </button>
+
+                        <button name="action_view_invoice"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                            <field name="invoice_ids" invisible="1"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="bo_number" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
+                        </group>
+                        <group>
+                            <field name="default_start_date" required="1"/>
+                            <field name="default_end_date" required="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Booking Order Lines" name="booking_order_lines">
+                            <field name="booking_order_line" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                <form string="Booking Order Lines">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="product_id"/>
+                                                <field name="serial_number"/>
+                                                <field name="start_date"/>
+                                                <field name="end_date"/>
+                                            </group>
+                                            <group>
+                                                <field name="actual_start_date" readonly="1"/>
+                                                <field name="actual_end_date" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                                <tree string="Booking Order Lines" editable="bottom">
+                                    <field name="product_id" domain="[('tracking','=','none'),('booking_ok','=',True)]"/>
+                                    <field name="serial_number" readonly="1"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="actual_start_date" />
+                                    <field name="actual_end_date" />
+                                    <field name="product_uom_qty"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                            <group name="name">
+                                <separator string="Remarks" colspan="4"/>
+                                <field name="name" colspan="4" nolabel="1"
+                                       placeholder="This remark will be displayed on the booking order."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_booking_order_calendar">
+        <field name="name">booking.order.calendar</field>
+        <field name="model">booking.order</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar color="partner_id" date_start="default_start_date" date_stop="default_end_date" string="Booking Order" mode="month">
+                <field name="bo_number"/>
+                <field name="partner_id"/>
+                <field name="products_name"/>
+                <field name="delivery_name"/>
+                <field name="invoice_name"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_booking_order_filter" model="ir.ui.view">
+        <field name="name">booking.order.list.select</field>
+        <field name="model">booking.order</field>
+        <field name="arch" type="xml">
+            <search string="Search Booking Order">
+                <field name="bo_number"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="product_id"/>
+                <field name="product_serial_number"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_booking_order" model="ir.actions.act_window">
+        <field name="name">Booking Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">booking.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">calendar,form,tree</field>
+        <field name="search_view_id" ref="view_booking_order_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a Booking Order.
+            </p><p>
+            Your next actions should flow efficiently: validate the Booking Order,
+            then create the Invoice and collect the Payment.
+        </p>
+        </field>
+    </record>
+    <menuitem id="menu_sale_quotationsqqq" name="Booking Orders"
+              action="action_booking_order" parent="sales_team.menu_sales"
+              sequence="11"/>
+</odoo>

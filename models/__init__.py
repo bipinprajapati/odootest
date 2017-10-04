@@ -1,0 +1,4 @@
+import product
+import booking_order
+import stock_picking
+import account_invoice
